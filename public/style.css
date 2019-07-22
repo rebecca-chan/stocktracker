@@ -1,9 +1,24 @@
 body {
-  font-family: sans-serif;
+  font-family: 'Roboto', sans-serif;
+  background: #0f2027; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #2c5364,
+    #203a43,
+    #0f2027
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #2c5364,
+    #203a43,
+    #0f2027
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color: white;
 }
 
 a {
   text-decoration: none;
+  color: rgb(139, 201, 201);
 }
 
 label {
@@ -18,4 +33,8 @@ nav a {
 form div {
   margin: 1em;
   display: inline-block;
+}
+
+h1 {
+  color: white;
 }

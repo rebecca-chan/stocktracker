@@ -11,7 +11,6 @@ import FormControl from '@material-ui/core/FormControl'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
-import './App.css'
 import TextField from '@material-ui/core/TextField'
 import {createGenerateClassName} from '@material-ui/styles'
 
@@ -49,7 +48,7 @@ const styles = theme => ({
   },
   submit: {
     // marginTop: theme.spacing.unit * 3
-    backgroundColor: 'blue',
+    backgroundColor: 'teal',
     float: 'right',
     [theme.breakpoints.down('sm')]: {
       width: '100%'
