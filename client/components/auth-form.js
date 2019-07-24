@@ -20,16 +20,6 @@ const styles = theme => ({
     display: 'block', // Fix IE 11 issue.
     marginLeft: theme.spacing(3),
     marginRight: theme.spacing(3),
-    [theme.breakpoints.up(400 + theme.spacing(3) * 2)]: {
-      width: '60%',
-      marginLeft: 'auto',
-      marginRight: 'auto'
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '80%',
-      marginLeft: 'auto',
-      marginRight: 'auto'
-    },
     backgroundColor: 'transparent'
   },
   paper: {
@@ -49,14 +39,7 @@ const styles = theme => ({
   submit: {
     // marginTop: theme.spacing.unit * 3
     backgroundColor: 'teal',
-    float: 'right',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
-      // padding: '.7em'
-    },
-    [theme.breakpoints.between('sm', 'lg')]: {
-      width: '30%'
-    }
+    float: 'right'
   }
 })
 
@@ -68,7 +51,12 @@ const AuthForm = props => {
       <main className={classes.main}>
         <CssBaseline />
         <Paper className={createGenerateClassName.paper}>
-          <Typography component="h1" variant="h5" clasname={classes.center}>
+          <Typography
+            component="h1"
+            variant="h5"
+            className={classes.center}
+            color="black"
+          >
             {displayName}
           </Typography>
           <form className={classes.form} onSubmit={handleSubmit} name={name}>
@@ -146,7 +134,7 @@ const AuthForm = props => {
 const mapLogin = state => {
   return {
     name: 'login',
-    displayName: 'Login',
+    displayName: 'Sign In',
     error: state.user.error
   }
 }
@@ -154,7 +142,7 @@ const mapLogin = state => {
 const mapSignup = state => {
   return {
     name: 'signup',
-    displayName: 'Sign Up',
+    displayName: 'Register',
     error: state.user.error
   }
 }
