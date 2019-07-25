@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {Transaction} = require('../db/models')
+const {Transaction, User} = require('../db/models')
 module.exports = router
 
 function isAuthenticated(req, res, next) {
@@ -11,6 +11,7 @@ function isAuthenticated(req, res, next) {
   }
 }
 
+//gets balance of latest transaction
 router.get('/', isAuthenticated, async (req, res, next) => {
   try {
     if (req.user) {
@@ -28,6 +29,7 @@ router.get('/', isAuthenticated, async (req, res, next) => {
   }
 })
 
+//gets accumulated active stocks
 router.get('/portfolio', isAuthenticated, async (req, res, next) => {
   try {
     if (req.user) {
@@ -55,6 +57,7 @@ router.get('/portfolio', isAuthenticated, async (req, res, next) => {
   }
 })
 
+//gets every transaction
 router.get('/details', isAuthenticated, async (req, res, next) => {
   try {
     if (req.user) {
@@ -75,13 +78,31 @@ router.post('/', async (req, res, next) => {
     const tradeInfo = req.body
     const transaction = await Transaction.create({
       total: tradeInfo.total,
-      balance: tradeInfo.balance,
       transactionType: tradeInfo.transactionType,
       stockName: tradeInfo.stockName,
       quantity: tradeInfo.quantity,
       price: tradeInfo.price,
       userId: tradeInfo.userId
     })
+
+    const userBalance = await User.findAll({
+      where: {
+        userId: req.user.Id
+      }
+    })
+
+    const newBalance = userBalance + req.body.total
+
+    const userUpdate = await User.update(
+      {balance: newBalance},
+      {
+        where: {
+          userId: req.user.Id
+        }
+      }
+    )
+    console.log(userUpdate)
+    console.log(transaction)
     res.sendStatus(201)
   } catch (error) {
     console.error(error)

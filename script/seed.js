@@ -13,11 +13,13 @@ async function seed() {
       firstName: 'cody',
       lastName: 'murphy',
       email: 'cody@email.com',
+      balance: 4400,
       password: '123'
     }),
     User.create({
       firstName: 'murphy',
       lastName: 'mcmurphy',
+      balance: 3200,
       email: 'murphy@email.com',
       password: '123'
     })
@@ -26,7 +28,6 @@ async function seed() {
   const transactions = await Promise.all([
     Transaction.create({
       date: '2018-10-15 19:10:25-07',
-      balance: 4000,
       transactionType: 'buy',
       stockName: 'SHOP',
       quantity: 10,
@@ -36,7 +37,6 @@ async function seed() {
     }),
     Transaction.create({
       date: '2018-10-16 19:10:25-07',
-      balance: 3400,
       transactionType: 'buy',
       stockName: 'PLNT',
       quantity: 20,
@@ -46,7 +46,6 @@ async function seed() {
     }),
     Transaction.create({
       date: '2018-12-30 19:10:25-07',
-      balance: 4400,
       transactionType: 'sell',
       stockName: 'PLNT',
       quantity: -20,
@@ -56,7 +55,6 @@ async function seed() {
     }),
     Transaction.create({
       date: '2019-01-29 19:10:25-07',
-      balance: 3200,
       transactionType: 'buy',
       stockName: 'AMZN',
       quantity: 1,

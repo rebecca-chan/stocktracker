@@ -5,10 +5,6 @@ const Transaction = db.define('transaction', {
   date: {
     type: Sequelize.DATE
   },
-  balance: {
-    type: Sequelize.INTEGER,
-    defaultValue: '5000'
-  },
   transactionType: {
     type: Sequelize.ENUM('buy', 'sell'),
     allowNull: false
