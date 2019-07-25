@@ -25,19 +25,20 @@ export const getPortolio = () => async dispatch => {
 
 export const getTransactions = () => async dispatch => {
   try {
-    const {data} = await axios.get(`/transactions/details`)
+    const {data} = await axios.get(`api/transactions/details`)
+    console.log(data, 'data from got transactions')
     dispatch(gotAllTransactions(data))
   } catch (error) {
     console.error(error)
   }
 }
 
-const initialState = {
+const transactionState = {
   transactions: [],
   portfolio: []
 }
 
-export default function transactionsReducer(state = initialState, action) {
+export default function transactionsReducer(state = transactionState, action) {
   switch (action.type) {
     case GOT_PORTFOLIO:
       return [...state.portfolio, ...action.portfolio]
