@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
-const {Transactions} = require('../db/models')
+const {Transaction} = require('../db/models')
+module.exports = router
 
 function isAuthenticated(req, res, next) {
   if (req.user.id) {
@@ -13,7 +14,51 @@ function isAuthenticated(req, res, next) {
 router.get('/', isAuthenticated, async (req, res, next) => {
   try {
     if (req.user) {
-      const response = await Transactions.findAll({
+      const latest = await Transaction.findAll({
+        where: {
+          userId: req.user.id
+        },
+        limit: 1,
+        order: [['date', 'DESC']]
+      })
+      res.send(latest)
+    }
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+router.get('/portfolio', isAuthenticated, async (req, res, next) => {
+  try {
+    if (req.user) {
+      const allStocks = await Transaction.findAll({
+        where: {
+          userId: req.user.id
+        }
+      })
+
+      const stocksSummed = allStocks.reduce((acc, currentStock, stockIdx) => {
+        const idx = acc.findIndex(
+          stock => stock.stockName === currentStock.stockName
+        )
+        idx < 0
+          ? acc.push(currentStock)
+          : (acc[idx].quantity += currentStock.quantity)
+        return acc
+      }, [])
+
+      const positives = stocksSummed.filter(stock => stock.quantity > 0)
+      res.json(positives)
+    }
+  } catch (error) {
+    console.error(error)
+  }
+})
+
+router.get('/details', isAuthenticated, async (req, res, next) => {
+  try {
+    if (req.user) {
+      const response = await Transaction.findAll({
         where: {
           userId: req.user.id
         }
@@ -37,7 +82,6 @@ router.post('/', async (req, res, next) => {
       price: tradeInfo.price,
       userId: tradeInfo.userId
     })
-    console.log(transaction)
     res.sendStatus(201)
   } catch (error) {
     console.error(error)

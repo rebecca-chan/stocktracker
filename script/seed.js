@@ -31,6 +31,26 @@ async function seed() {
       stockName: 'SHOP',
       quantity: 10,
       price: 100,
+      total: -1000,
+      userId: 1
+    }),
+    Transaction.create({
+      date: '2018-10-16 19:10:25-07',
+      balance: 3400,
+      transactionType: 'buy',
+      stockName: 'PLNT',
+      quantity: 20,
+      price: 30,
+      total: -600,
+      userId: 1
+    }),
+    Transaction.create({
+      date: '2018-12-30 19:10:25-07',
+      balance: 4400,
+      transactionType: 'sell',
+      stockName: 'PLNT',
+      quantity: -20,
+      price: 50,
       total: 1000,
       userId: 1
     }),
@@ -42,7 +62,7 @@ async function seed() {
       quantity: 1,
       price: 1800,
       userId: 2,
-      total: 1800
+      total: -1800
     })
   ])
 
