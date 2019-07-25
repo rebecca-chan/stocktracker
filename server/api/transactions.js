@@ -15,14 +15,12 @@ function isAuthenticated(req, res, next) {
 router.get('/', isAuthenticated, async (req, res, next) => {
   try {
     if (req.user) {
-      const latest = await Transaction.findAll({
+      const user = await User.findAll({
         where: {
-          userId: req.user.id
-        },
-        limit: 1,
-        order: [['date', 'DESC']]
+          id: req.user.id
+        }
       })
-      res.send(latest)
+      res.send(user)
     }
   } catch (error) {
     console.log(error)
