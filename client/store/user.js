@@ -6,6 +6,7 @@ import history from '../history'
  */
 const GET_USER = 'GET_USER'
 const REMOVE_USER = 'REMOVE_USER'
+const GET_BALANCE = 'GET_BALANCE'
 
 /**
  * INITIAL STATE
@@ -17,7 +18,6 @@ const defaultUser = {}
  */
 const getUser = user => ({type: GET_USER, user})
 const removeUser = () => ({type: REMOVE_USER})
-
 /**
  * THUNK CREATORS
  */

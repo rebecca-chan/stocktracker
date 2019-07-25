@@ -51,12 +51,7 @@ const AuthForm = props => {
       <main className={classes.main}>
         <CssBaseline />
         <Paper className={createGenerateClassName.paper}>
-          <Typography
-            component="h1"
-            variant="h5"
-            className={classes.center}
-            color="black"
-          >
+          <Typography component="h1" variant="h5" className={classes.center}>
             {displayName}
           </Typography>
           <form className={classes.form} onSubmit={handleSubmit} name={name}>

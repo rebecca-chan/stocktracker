@@ -6,11 +6,15 @@ import {connect} from 'react-redux'
  * COMPONENT
  */
 export const UserHome = props => {
-  const {firstName} = props
+  const {firstName, balance} = props
 
   return (
     <div>
-      <h3>Welcome, {firstName}!</h3>
+      <h2>Welcome, {firstName[0].toUpperCase() + firstName.substring(1)}!</h2>
+      <h3>
+        You have ${balance.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} to
+        trade with today.
+      </h3>
     </div>
   )
 }
@@ -20,7 +24,8 @@ export const UserHome = props => {
  */
 const mapState = state => {
   return {
-    firstName: state.user.firstName
+    firstName: state.user.firstName,
+    balance: state.user.balance
   }
 }
 
