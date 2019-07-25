@@ -98,7 +98,7 @@ class Transactions extends React.Component {
                 </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
+            {/* <TableBody>
               {transactions.length
                 ? transactions.map(transaction => (
                     <TableRow hover key={transaction.id}>
@@ -131,7 +131,7 @@ class Transactions extends React.Component {
                     </TableRow>
                   ))
                 : null}
-            </TableBody>
+            </TableBody> */}
           </Table>
         </Paper>
       </div>
