@@ -1,438 +1,101 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import deburr from 'lodash/deburr'
-import Downshift from 'downshift'
-import {makeStyles} from '@material-ui/core/styles'
-import TextField from '@material-ui/core/TextField'
-import Popper from '@material-ui/core/Popper'
+import {connect} from 'react-redux'
+
+//materialui form components
+
+import Button from '@material-ui/core/Button'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import FormControl from '@material-ui/core/FormControl'
+
 import Paper from '@material-ui/core/Paper'
-import MenuItem from '@material-ui/core/MenuItem'
-import Chip from '@material-ui/core/Chip'
+import Typography from '@material-ui/core/Typography'
+import withStyles from '@material-ui/core/styles/withStyles'
+import TextField from '@material-ui/core/TextField'
+import {createGenerateClassName} from '@material-ui/styles'
 
-const suggestions = [
-  {label: 'Afghanistan'},
-  {label: 'Aland Islands'},
-  {label: 'Albania'},
-  {label: 'Algeria'},
-  {label: 'American Samoa'},
-  {label: 'Andorra'},
-  {label: 'Angola'},
-  {label: 'Anguilla'},
-  {label: 'Antarctica'},
-  {label: 'Antigua and Barbuda'},
-  {label: 'Argentina'},
-  {label: 'Armenia'},
-  {label: 'Aruba'},
-  {label: 'Australia'},
-  {label: 'Austria'},
-  {label: 'Azerbaijan'},
-  {label: 'Bahamas'},
-  {label: 'Bahrain'},
-  {label: 'Bangladesh'},
-  {label: 'Barbados'},
-  {label: 'Belarus'},
-  {label: 'Belgium'},
-  {label: 'Belize'},
-  {label: 'Benin'},
-  {label: 'Bermuda'},
-  {label: 'Bhutan'},
-  {label: 'Bolivia, Plurinational State of'},
-  {label: 'Bonaire, Sint Eustatius and Saba'},
-  {label: 'Bosnia and Herzegovina'},
-  {label: 'Botswana'},
-  {label: 'Bouvet Island'},
-  {label: 'Brazil'},
-  {label: 'British Indian Ocean Territory'},
-  {label: 'Brunei Darussalam'}
-]
-
-function renderInput(inputProps) {
-  const {InputProps, classes, ref, ...other} = inputProps
-
-  return (
-    <TextField
-      InputProps={{
-        inputRef: ref,
-        classes: {
-          root: classes.inputRoot,
-          input: classes.inputInput
-        },
-        ...InputProps
-      }}
-      {...other}
-    />
-  )
-}
-
-renderInput.propTypes = {
-  classes: PropTypes.object.isRequired,
-  InputProps: PropTypes.object
-}
-
-function renderSuggestion(suggestionProps) {
-  const {
-    suggestion,
-    index,
-    itemProps,
-    highlightedIndex,
-    selectedItem
-  } = suggestionProps
-  const isHighlighted = highlightedIndex === index
-  const isSelected = (selectedItem || '').indexOf(suggestion.label) > -1
-
-  return (
-    <MenuItem
-      {...itemProps}
-      key={suggestion.label}
-      selected={isHighlighted}
-      component="div"
-      style={{
-        fontWeight: isSelected ? 500 : 400
-      }}
-    >
-      {suggestion.label}
-    </MenuItem>
-  )
-}
-
-renderSuggestion.propTypes = {
-  highlightedIndex: PropTypes.oneOfType([
-    PropTypes.oneOf([null]),
-    PropTypes.number
-  ]).isRequired,
-  index: PropTypes.number.isRequired,
-  itemProps: PropTypes.object.isRequired,
-  selectedItem: PropTypes.string.isRequired,
-  suggestion: PropTypes.shape({
-    label: PropTypes.string.isRequired
-  }).isRequired
-}
-
-function getSuggestions(value, {showEmpty = false} = {}) {
-  const inputValue = deburr(value.trim()).toLowerCase()
-  const inputLength = inputValue.length
-  let count = 0
-
-  return inputLength === 0 && !showEmpty
-    ? []
-    : suggestions.filter(suggestion => {
-        const keep =
-          count < 5 &&
-          suggestion.label.slice(0, inputLength).toLowerCase() === inputValue
-
-        if (keep) {
-          count += 1
-        }
-
-        return keep
-      })
-}
-
-function DownshiftMultiple(props) {
-  const {classes} = props
-  const [inputValue, setInputValue] = React.useState('')
-  const [selectedItem, setSelectedItem] = React.useState([])
-
-  function handleKeyDown(event) {
-    if (
-      selectedItem.length &&
-      !inputValue.length &&
-      event.key === 'Backspace'
-    ) {
-      setSelectedItem(selectedItem.slice(0, selectedItem.length - 1))
-    }
-  }
-
-  function handleInputChange(event) {
-    setInputValue(event.target.value)
-  }
-
-  function handleChange(item) {
-    let newSelectedItem = [...selectedItem]
-    if (newSelectedItem.indexOf(item) === -1) {
-      newSelectedItem = [...newSelectedItem, item]
-    }
-    setInputValue('')
-    setSelectedItem(newSelectedItem)
-  }
-
-  const handleDelete = item => () => {
-    const newSelectedItem = [...selectedItem]
-    newSelectedItem.splice(newSelectedItem.indexOf(item), 1)
-    setSelectedItem(newSelectedItem)
-  }
-
-  return (
-    <Downshift
-      id="downshift-multiple"
-      inputValue={inputValue}
-      onChange={handleChange}
-      selectedItem={selectedItem}
-    >
-      {({
-        getInputProps,
-        getItemProps,
-        getLabelProps,
-        isOpen,
-        inputValue: inputValue2,
-        selectedItem: selectedItem2,
-        highlightedIndex
-      }) => {
-        const {onBlur, onChange, onFocus, ...inputProps} = getInputProps({
-          onKeyDown: handleKeyDown,
-          placeholder: 'Select multiple countries'
-        })
-
-        return (
-          <div className={classes.container}>
-            {renderInput({
-              fullWidth: true,
-              classes,
-              label: 'Countries',
-              InputLabelProps: getLabelProps(),
-              InputProps: {
-                startAdornment: selectedItem.map(item => (
-                  <Chip
-                    key={item}
-                    tabIndex={-1}
-                    label={item}
-                    className={classes.chip}
-                    onDelete={handleDelete(item)}
-                  />
-                )),
-                onBlur,
-                onChange: event => {
-                  handleInputChange(event)
-                  onChange(event)
-                },
-                onFocus
-              },
-              inputProps
-            })}
-
-            {isOpen ? (
-              <Paper className={classes.paper} square>
-                {getSuggestions(inputValue2).map((suggestion, index) =>
-                  renderSuggestion({
-                    suggestion,
-                    index,
-                    itemProps: getItemProps({item: suggestion.label}),
-                    highlightedIndex,
-                    selectedItem: selectedItem2
-                  })
-                )}
-              </Paper>
-            ) : null}
-          </div>
-        )
-      }}
-    </Downshift>
-  )
-}
-
-DownshiftMultiple.propTypes = {
-  classes: PropTypes.object.isRequired
-}
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-    height: 250
-  },
-  container: {
-    flexGrow: 1,
-    position: 'relative'
+const styles = theme => ({
+  main: {
+    width: '70%',
+    display: 'block', // Fix IE 11 issue.
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3),
+    backgroundColor: 'transparent'
   },
   paper: {
-    position: 'absolute',
-    zIndex: 1,
-    marginTop: theme.spacing(1),
-    left: 0,
-    right: 0
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(3)}px`
   },
-  chip: {
-    margin: theme.spacing(0.5, 0.25)
+  form: {
+    marginTop: theme.spacing()
   },
-  inputRoot: {
-    flexWrap: 'wrap'
+  textField: {
+    marginLeft: theme.spacing(),
+    marginRight: theme.spacing()
   },
-  inputInput: {
-    width: 'auto',
-    flexGrow: 1
-  },
-  divider: {
-    height: theme.spacing(2)
+  submit: {
+    // marginTop: theme.spacing.unit * 3
+    backgroundColor: 'teal',
+    float: 'right'
   }
-}))
+})
 
-let popperNode
+export default class TradeForm extends React.Component {
+  constructor() {
+    super()
+  }
 
-export default function TradeForm() {
-  const classes = useStyles()
-
-  return (
-    <div className={classes.root}>
-      <Downshift id="downshift-simple">
-        {({
-          getInputProps,
-          getItemProps,
-          getLabelProps,
-          getMenuProps,
-          highlightedIndex,
-          inputValue,
-          isOpen,
-          selectedItem
-        }) => {
-          const {onBlur, onFocus, ...inputProps} = getInputProps({
-            placeholder: 'Search for a country (start with a)'
-          })
-
-          return (
-            <div className={classes.container}>
-              {renderInput({
-                fullWidth: true,
-                classes,
-                label: 'Country',
-                InputLabelProps: getLabelProps({shrink: true}),
-                InputProps: {onBlur, onFocus},
-                inputProps
-              })}
-
-              <div {...getMenuProps()}>
-                {isOpen ? (
-                  <Paper className={classes.paper} square>
-                    {getSuggestions(inputValue).map((suggestion, index) =>
-                      renderSuggestion({
-                        suggestion,
-                        index,
-                        itemProps: getItemProps({item: suggestion.label}),
-                        highlightedIndex,
-                        selectedItem
-                      })
-                    )}
-                  </Paper>
-                ) : null}
-              </div>
-            </div>
-          )
-        }}
-      </Downshift>
-      <div className={classes.divider} />
-      <DownshiftMultiple classes={classes} />
-      <div className={classes.divider} />
-      <Downshift id="downshift-popper">
-        {({
-          getInputProps,
-          getItemProps,
-          getLabelProps,
-          getMenuProps,
-          highlightedIndex,
-          inputValue,
-          isOpen,
-          selectedItem
-        }) => {
-          const {onBlur, onFocus, ...inputProps} = getInputProps({
-            placeholder: 'With Popper'
-          })
-
-          return (
-            <div className={classes.container}>
-              {renderInput({
-                fullWidth: true,
-                classes,
-                label: 'Country',
-                InputProps: {onBlur, onFocus},
-                InputLabelProps: getLabelProps({shrink: true}),
-                inputProps,
-                ref: node => {
-                  popperNode = node
-                }
-              })}
-
-              <Popper open={isOpen} anchorEl={popperNode}>
-                <div
-                  {...(isOpen
-                    ? getMenuProps({}, {suppressRefError: true})
-                    : {})}
-                >
-                  <Paper
-                    square
-                    style={{
-                      marginTop: 8,
-                      width: popperNode ? popperNode.clientWidth : undefined
-                    }}
-                  >
-                    {getSuggestions(inputValue).map((suggestion, index) =>
-                      renderSuggestion({
-                        suggestion,
-                        index,
-                        itemProps: getItemProps({item: suggestion.label}),
-                        highlightedIndex,
-                        selectedItem
-                      })
-                    )}
-                  </Paper>
-                </div>
-              </Popper>
-            </div>
-          )
-        }}
-      </Downshift>
-      <div className={classes.divider} />
-      <Downshift id="downshift-options">
-        {({
-          clearSelection,
-          getInputProps,
-          getItemProps,
-          getLabelProps,
-          getMenuProps,
-          highlightedIndex,
-          inputValue,
-          isOpen,
-          openMenu,
-          selectedItem
-        }) => {
-          const {onBlur, onChange, onFocus, ...inputProps} = getInputProps({
-            onChange: event => {
-              if (event.target.value === '') {
-                clearSelection()
-              }
-            },
-            onFocus: openMenu,
-            placeholder: 'With the clear & show empty options'
-          })
-
-          return (
-            <div className={classes.container}>
-              {renderInput({
-                fullWidth: true,
-                classes,
-                label: 'Countries',
-                InputLabelProps: getLabelProps({shrink: true}),
-                InputProps: {onBlur, onChange, onFocus},
-                inputProps
-              })}
-
-              <div {...getMenuProps()}>
-                {isOpen ? (
-                  <Paper className={classes.paper} square>
-                    {getSuggestions(inputValue, {showEmpty: true}).map(
-                      (suggestion, index) =>
-                        renderSuggestion({
-                          suggestion,
-                          index,
-                          itemProps: getItemProps({item: suggestion.label}),
-                          highlightedIndex,
-                          selectedItem
-                        })
-                    )}
-                  </Paper>
-                ) : null}
-              </div>
-            </div>
-          )
-        }}
-      </Downshift>
-    </div>
-  )
+  render() {
+    console.log(this.props, 'form props')
+    return (
+      <div className="login-new">
+        <main className={classes.main}>
+          <CssBaseline />
+          <Paper className={createGenerateClassName.paper}>
+            <Typography component="h1" variant="h5" className={classes.center}>
+              Market Order Form
+            </Typography>
+            <form className={classes.form} onSubmit={handleSubmit} name={name}>
+              <FormControl margin="normal" required fullWidth>
+                <TextField
+                  required
+                  id="stockName"
+                  label="stockName"
+                  className={classes.textField}
+                  margin="normal"
+                  variant="outlined"
+                  autoFocus
+                />
+              </FormControl>
+              <FormControl margin="normal" required fullWidth>
+                <TextField
+                  required
+                  id="password"
+                  label="Password"
+                  type="password"
+                  className={classes.textField}
+                  margin="normal"
+                  variant="outlined"
+                  autoComplete="current-password"
+                />
+              </FormControl>
+              <Button
+                type="submit" // variant="contained"
+                color="inherit"
+                className={classes.submit}
+              >
+                {displayName}
+              </Button>
+              {error &&
+                error.response && (
+                  <div className="form-error"> {error.response.data} </div>
+                )}
+            </form>
+          </Paper>
+        </main>
+      </div>
+    )
+  }
 }
