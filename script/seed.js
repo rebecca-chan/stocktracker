@@ -22,6 +22,13 @@ async function seed() {
       balance: 3200,
       email: 'murphy@email.com',
       password: '123'
+    }),
+    User.create({
+      firstName: 'Rebecca',
+      lastName: 'Chan',
+      balance: 200,
+      email: 'chan.rebecca@gmail.com',
+      password: '123'
     })
   ])
 
@@ -61,6 +68,60 @@ async function seed() {
       price: 1800,
       userId: 2,
       total: -1800
+    }),
+    Transaction.create({
+      date: '2018-10-15 19:10:25-07',
+      transactionType: 'buy',
+      stockName: 'SHOP',
+      quantity: 10,
+      price: 100,
+      total: -1000,
+      userId: 3
+    }),
+    Transaction.create({
+      date: '2018-10-16 19:10:25-07',
+      transactionType: 'buy',
+      stockName: 'PLNT',
+      quantity: 20,
+      price: 30,
+      total: -600,
+      userId: 3
+    }),
+    Transaction.create({
+      date: '2018-12-30 19:10:25-07',
+      transactionType: 'sell',
+      stockName: 'PLNT',
+      quantity: -10,
+      price: 50,
+      total: 500,
+      userId: 3
+    }),
+    Transaction.create({
+      date: '2019-01-29 19:10:25-07',
+      transactionType: 'buy',
+      stockName: 'AMZN',
+      quantity: 1,
+      price: 1800,
+      userId: 3,
+      total: -1800
+    }),
+    Transaction.create({
+      date: '2019-01-29 19:10:25-07',
+      transactionType: 'buy',
+      stockName: 'FB',
+      quantity: 8,
+      price: 100,
+      userId: 3,
+      total: -800
+    }),
+    Transaction.create({
+      date: '2019-01-29 19:10:25-07',
+      transactionType: 'buy',
+      stockName: 'AIG+',
+      quantity: 6,
+      price: 50,
+      userId: 3,
+      total: -300
     })
   ])
 
