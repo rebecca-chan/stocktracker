@@ -13,7 +13,7 @@ async function seed() {
       firstName: 'cody',
       lastName: 'murphy',
       email: 'cody@email.com',
-      balance: 4400,
+      balance: 3900,
       password: '123'
     }),
     User.create({
@@ -48,9 +48,9 @@ async function seed() {
       date: '2018-12-30 19:10:25-07',
       transactionType: 'sell',
       stockName: 'PLNT',
-      quantity: -20,
+      quantity: -10,
       price: 50,
-      total: 1000,
+      total: 500,
       userId: 1
     }),
     Transaction.create({

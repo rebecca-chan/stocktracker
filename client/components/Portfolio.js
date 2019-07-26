@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {getPortfolio} from '../store/transactions'
+import {getPortfolio} from '../store/porfolio'
+import axios from 'axios'
 
 //importing Material UI components
 import {withStyles} from '@material-ui/core/styles'
@@ -20,8 +21,7 @@ const styles = theme => ({
   },
   tableRow: {
     width: '100%',
-    margin: 'auto',
-    stripedRows: true
+    margin: 'auto'
   },
   body: {
     stripedRows: true
@@ -39,16 +39,13 @@ const styles = theme => ({
 
 class Portfolio extends React.Component {
   componentDidMount() {
-    console.log(this.props.getPortfolio)
     this.props.getPortfolio()
   }
   render() {
-    console.log(this.props, 'this.props')
     const {classes, portfolio} = this.props
-    console.log(portfolio, 'portfolio')
     return (
       <div id="transactionsTable">
-        <h2>Porfolio</h2>
+        <h2>Portfolio</h2>
 
         <Paper className={classes.root}>
           <Table className={classes.table}>
@@ -84,42 +81,30 @@ class Portfolio extends React.Component {
                 </TableCell>
               </TableRow>
             </TableHead>
-            {/* <TableBody striped={true}>
-            {portfolio.length? portfolio.map(stock => (
-              <TableRow hover key={stock.id}>
-                <TableCell component="th" scope="row">
-                  {stock.stockName}
-                </TableCell>
-                <TableCell align="left">{stock.quantity}</TableCell>
-                <TableCell align="left">{stock.currentPrice}</TableCell>
-                <TableCell align="left">
-                  {stock.quantity * stock.currentPrice}
-                </TableCell>
-                <TableCell align="right">
-                  $
-                  {stock.quantity
-                    ? stock.quantity
-                        .toFixed(2)
-                        .replace(/\d(?=(\d{3})+\.)/g, '$&,')
-                    : null}
-                </TableCell>
-                <TableCell align="right">
-                  {stock.currentPrice
-                    ? stock.currentPrice
-                        .toFixed(2)
-                        .replace(/\d(?=(\d{3})+\.)/g, '$&,')
-                    : null}
-                </TableCell>
-                <TableCell align="right">
-                  {stock.currentPrice && stock.quantity
-                    ? (stock.currentPrice * stock.quantity)
-                        .toFixed(2)
-                        .replace(/\d(?=(\d{3})+\.)/g, '$&,')
-                    : null}
-                </TableCell>
-              </TableRow>
-            )): null}
-          </TableBody> */}
+            <TableBody>
+              {portfolio.length
+                ? portfolio.map(stock => (
+                    <TableRow hover key={stock.id}>
+                      <TableCell component="th" scope="row">
+                        {stock.stockName}
+                      </TableCell>
+                      <TableCell align="right">{stock.quantity}</TableCell>
+                      <TableCell align="right">
+                        ${stock.lastSalePrice
+                          ? stock.lastSalePrice
+                              .toFixed(2)
+                              .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                          : null}
+                      </TableCell>
+                      <TableCell align="right">
+                        ${(stock.quantity * stock.lastSalePrice)
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : null}
+            </TableBody>
           </Table>
         </Paper>
       </div>
@@ -138,6 +123,6 @@ const mapDispatchToProps = dispatch => ({
   getPortfolio: () => dispatch(getPortfolio())
 })
 
-//   const WrappedPortfolio = withStyles(styles)(Portfolio)
+const WrappedPortfolio = withStyles(styles)(Portfolio)
 
-export default connect(mapState, mapDispatchToProps)(Portfolio)
+export default connect(mapState, mapDispatchToProps)(WrappedPortfolio)
