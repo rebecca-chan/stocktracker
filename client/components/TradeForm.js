@@ -1,5 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
+import {submitTrade} from '../store/trade'
 
 //materialui form components
 
@@ -42,12 +43,13 @@ const styles = theme => ({
   }
 })
 
-export default class TradeForm extends React.Component {
+class TradeForm extends React.Component {
   constructor() {
     super()
   }
 
   render() {
+    const {classes, handleSubmit, error} = this.props
     console.log(this.props, 'form props')
     return (
       <div className="login-new">
@@ -72,13 +74,21 @@ export default class TradeForm extends React.Component {
               <FormControl margin="normal" required fullWidth>
                 <TextField
                   required
-                  id="password"
-                  label="Password"
-                  type="password"
+                  id="quantity"
+                  label="quantity"
+                  type="quantity"
                   className={classes.textField}
                   margin="normal"
                   variant="outlined"
-                  autoComplete="current-password"
+                />
+                <TextField
+                  required
+                  id="transactionType"
+                  label="transactionType"
+                  type="transactionType"
+                  className={classes.textField}
+                  margin="normal"
+                  variant="outlined"
                 />
               </FormControl>
               <Button
@@ -86,7 +96,7 @@ export default class TradeForm extends React.Component {
                 color="inherit"
                 className={classes.submit}
               >
-                {displayName}
+                Submit Order
               </Button>
               {error &&
                 error.response && (
@@ -99,3 +109,34 @@ export default class TradeForm extends React.Component {
     )
   }
 }
+
+const mapDispatchToProps = dispatch => {
+  return {
+    handleSubmit(evt) {
+      evt.preventDefault()
+      const stockName = evt.target.stockName.value
+      const quantity = evt.target.quantity.value
+      const transactionType = evt.target.transactionType.value
+      const price = evt.target.price.value
+      let total
+      if (transactionType === 'buy') {
+        total = -quantity * price
+      } else {
+        total = quantity * price
+      }
+
+      dispatch(submitTrade(stockName, quantity, transactionType, price, total))
+    }
+  }
+}
+
+const mapState = state => {
+  console.log(state, 'state')
+  return {
+    transactions: state.transactions
+  }
+}
+
+const WrappedTradeForm = withStyles(styles)(TradeForm)
+
+export default connect(mapState, mapDispatchToProps)(WrappedTradeForm)
