@@ -23,17 +23,8 @@ const styles = theme => ({
     width: '100%',
     margin: 'auto'
   },
-  body: {
-    stripedRows: true
-  },
-  dropDown: {
-    width: '100%',
-    fullWidth: true,
-    textSize: '1em'
-  },
   tableCell: {
-    fontSize: '1em',
-    color: 'black'
+    fontSize: '1em'
   }
 })
 
@@ -43,6 +34,7 @@ class Portfolio extends React.Component {
   }
   render() {
     const {classes, portfolio} = this.props
+    console.log(this.props, 'porfolio props')
     return (
       <div id="transactionsTable">
         <h2>Portfolio</h2>
@@ -84,7 +76,7 @@ class Portfolio extends React.Component {
             <TableBody>
               {portfolio.length
                 ? portfolio.map(stock => (
-                    <TableRow hover key={stock.id}>
+                    <TableRow key={stock.id} style={{color: 'red'}}>
                       <TableCell component="th" scope="row">
                         {stock.stockName}
                       </TableCell>
