@@ -1,9 +1,9 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {getPortfolio} from '../store/porfolio'
-import axios from 'axios'
 
 //importing Material UI components
+
 import {withStyles} from '@material-ui/core/styles'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -19,12 +19,16 @@ const styles = theme => ({
     overflowX: 'auto',
     margin: 'auto'
   },
+  body: {
+    color: 'disabled'
+  },
   tableRow: {
     width: '100%',
     margin: 'auto'
   },
   tableCell: {
-    fontSize: '1em'
+    fontSize: '1em',
+    color: 'disabled'
   }
 })
 
@@ -34,7 +38,6 @@ class Portfolio extends React.Component {
   }
   render() {
     const {classes, portfolio} = this.props
-    console.log(this.props, 'porfolio props')
     return (
       <div id="transactionsTable">
         <h2>Portfolio</h2>
@@ -42,7 +45,7 @@ class Portfolio extends React.Component {
         <Paper className={classes.root}>
           <Table className={classes.table}>
             <TableHead className={classes.head}>
-              <TableRow>
+              <TableRow className={classes.tableRow}>
                 <TableCell
                   width="20%"
                   align="left"
@@ -76,23 +79,24 @@ class Portfolio extends React.Component {
             <TableBody>
               {portfolio.length
                 ? portfolio.map(stock => (
-                    <TableRow key={stock.id} style={{color: 'red'}}>
-                      <TableCell component="th" scope="row">
-                        {stock.stockName}
-                      </TableCell>
-                      <TableCell align="right">{stock.quantity}</TableCell>
-                      <TableCell align="right">
+                    <TableRow
+                      key={stock.id}
+                      style={{color: `${stock.color ? stock.color : 'gray'}`}}
+                    >
+                      <td align="left">{stock.stockName}</td>
+                      <td align="right">{stock.quantity}</td>
+                      <td align="right">
                         ${stock.lastSalePrice
                           ? stock.lastSalePrice
                               .toFixed(2)
                               .replace(/\d(?=(\d{3})+\.)/g, '$&,')
                           : null}
-                      </TableCell>
-                      <TableCell align="right">
+                      </td>
+                      <td align="right">
                         ${(stock.quantity * stock.lastSalePrice)
                           .toFixed(2)
                           .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
-                      </TableCell>
+                      </td>
                     </TableRow>
                   ))
                 : null}
