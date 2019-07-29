@@ -16,30 +16,27 @@ import {createGenerateClassName} from '@material-ui/styles'
 
 const styles = theme => ({
   main: {
-    width: '70%',
-    display: 'block', // Fix IE 11 issue.
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
+    width: '50%',
+    marginTop: theme.spacing(3),
+    margin: 'auto',
     backgroundColor: 'transparent'
   },
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(3),
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(3)}px`
+    alignItems: 'center'
   },
   form: {
     marginTop: theme.spacing()
   },
   textField: {
-    marginLeft: theme.spacing(),
-    marginRight: theme.spacing()
+    marginLeft: theme.spacing(3),
+    marginRight: theme.spacing(3)
   },
   submit: {
-    // marginTop: theme.spacing.unit * 3
     backgroundColor: 'teal',
-    float: 'right'
+    margin: 'auto'
   }
 })
 
@@ -47,7 +44,7 @@ const AuthForm = props => {
   const {name, displayName, handleSubmit, error} = props
   const {classes} = props
   return (
-    <div className="login-new">
+    <div>
       <main className={classes.main}>
         <CssBaseline />
         <Paper className={createGenerateClassName.paper}>
@@ -108,13 +105,12 @@ const AuthForm = props => {
                 autoComplete="current-password"
               />
             </FormControl>
-            <Button
+            <button
               type="submit" // variant="contained"
               color="inherit"
-              className={classes.submit}
             >
               {displayName}
-            </Button>
+            </button>
             {error &&
               error.response && (
                 <div className="form-error"> {error.response.data} </div>

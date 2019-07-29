@@ -15,18 +15,14 @@ import {createGenerateClassName} from '@material-ui/styles'
 
 const styles = theme => ({
   main: {
-    width: '70%',
-    display: 'block', // Fix IE 11 issue.
-    marginLeft: theme.spacing(3),
-    marginRight: theme.spacing(3),
+    width: '50%',
+    margin: 'auto',
     backgroundColor: 'transparent'
   },
   paper: {
-    marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    paddingBottom: theme.spacing(3)
+    alignItems: 'center'
   },
   form: {
     marginTop: theme.spacing()
@@ -74,9 +70,7 @@ class TradeForm extends React.Component {
     if (transactionType === 'sell') {
       quantity = -quantity
     }
-    console.log(this.state.sharesOwned, 'shares owned')
     let newQuantity = Number(this.state.sharesOwned) + Number(quantity)
-    console.log(newQuantity, 'IS THIS NEGATIVE')
     if (
       transactionType === 'sell' &&
       (newQuantity < 0 || !this.state.sharesOwned)
@@ -94,8 +88,6 @@ class TradeForm extends React.Component {
           price: this.state.price,
           total
         }
-
-        console.log(objToSubmit, 'submittedobject')
         this.props.submitTrade(objToSubmit)
         this.setState({stockName: '', quantity: 0, transactionType: null})
       }
@@ -105,7 +97,6 @@ class TradeForm extends React.Component {
   render() {
     const {classes, error, user} = this.props
     console.log(this.props, 'form props')
-
     return (
       <div className="login-new">
         <main className={classes.main}>

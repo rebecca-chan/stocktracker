@@ -37,14 +37,12 @@ export const getPortfolio = () => async dispatch => {
   }
 }
 
-const portfolioState = {
-  portfolio: []
-}
+const portfolioState = []
 
 export default function transactionsReducer(state = portfolioState, action) {
   switch (action.type) {
     case GOT_PORTFOLIO:
-      return [...state.portfolio, ...action.portfolio]
+      return [...state, ...action.portfolio]
     default:
       return state
   }
