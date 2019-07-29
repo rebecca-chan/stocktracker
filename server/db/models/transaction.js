@@ -3,7 +3,8 @@ const db = require('../db')
 
 const Transaction = db.define('transaction', {
   date: {
-    type: Sequelize.DATE
+    type: Sequelize.DATE,
+    defaultValue: Sequelize.NOW
   },
   transactionType: {
     type: Sequelize.ENUM('buy', 'sell'),

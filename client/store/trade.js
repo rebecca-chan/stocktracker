@@ -50,9 +50,7 @@ export const submitTrade = ({
   }
 }
 
-const formState = {
-  stockPreview: {}
-}
+const formState = {}
 
 export default function transactionsReducer(state = formState, action) {
   switch (action.type) {

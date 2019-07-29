@@ -74,40 +74,42 @@ router.get('/details', isAuthenticated, async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   try {
     //check balance
-    console.log(req.user, 'req.user')
-    const userBalance = await User.findAll({
+    const userInfo = await User.findOne({
       where: {
         id: req.user.id
       }
     })
-    const newBalance = userBalance + req.body.total
-    if (newBalance < 0)
+    console.log('USERINFO', userInfo)
+    const newBalance = Number(userInfo.balance) + Number(req.body.total)
+    console.log('NEWBLANACE', newBalance)
+    if (newBalance < 0) {
       res
-        .status(404)
+        .status(400)
         .send('You do not have enough in your account for this transaction.')
+    } else {
+      const tradeInfo = req.body
+      console.log(tradeInfo, 'tradeInfo')
+      const transaction = await Transaction.create({
+        total: tradeInfo.total,
+        transactionType: tradeInfo.transactionType,
+        stockName: tradeInfo.stockName,
+        quantity: tradeInfo.quantity,
+        price: tradeInfo.price,
+        userId: req.user.id
+      })
 
-    const tradeInfo = req.body
-
-    const transaction = await Transaction.create({
-      total: tradeInfo.total,
-      transactionType: tradeInfo.transactionType,
-      stockName: tradeInfo.stockName,
-      quantity: tradeInfo.quantity,
-      price: tradeInfo.price,
-      userId: tradeInfo.userId
-    })
-
-    const userUpdate = await User.update(
-      {balance: newBalance},
-      {
-        where: {
-          userId: req.user.Id
+      const userUpdate = await User.update(
+        {balance: newBalance},
+        {
+          where: {
+            id: req.user.id
+          }
         }
-      }
-    )
-    console.log(userUpdate)
-    console.log(transaction)
-    res.sendStatus(201)
+      )
+      console.log(userUpdate)
+      console.log(transaction)
+      res.sendStatus(201)
+    }
   } catch (error) {
     console.error(error)
   }

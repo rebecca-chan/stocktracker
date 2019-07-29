@@ -4,7 +4,6 @@ import {submitTrade, validateTrade} from '../store/trade'
 
 //materialui form components
 import Select from 'react-select'
-import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import FormControl from '@material-ui/core/FormControl'
 
@@ -13,7 +12,6 @@ import Typography from '@material-ui/core/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
 import TextField from '@material-ui/core/TextField'
 import {createGenerateClassName} from '@material-ui/styles'
-import {isNull} from 'util'
 
 const styles = theme => ({
   main: {
@@ -46,44 +44,50 @@ class TradeForm extends React.Component {
     this.state = {
       stockName: '',
       quantity: '',
-      selectedOption: null
+      price: props.trade.latestPrice,
+      balance: props.user.balance,
+      transactionType: null
     }
   }
 
-  handleChange = selectedOption => {
-    this.setState({selectedOption})
-    console.log('option selected', selectedOption)
+  handleChange = name => value => {
+    this.setState({[name]: value})
+    console.log('option selected', event)
   }
 
-  handleClick(evt) {
+  async handleClick(evt) {
     evt.preventDefault()
     let stock = document.getElementById('stockName').value
-    this.props.validateTrade(stock)
+    await this.props.validateTrade(stock)
+    console.log(this.props, 'handleclick props access')
+    this.setState({price: this.props.trade.latestPrice})
   }
 
   handleSubmit(evt) {
     evt.preventDefault()
-    let total
-    if (this.state.selectedOption === 'buy') {
-      total = -(this.state.quantity * this.props.trade.latestPrice)
+    let total = (this.state.price * evt.target.quantity.value).toFixed(2)
+    if (this.state.transactionType.value === 'buy') {
+      total = -total
+    }
+    let newBalance = Number(total) + Number(this.state.balance)
+    if (newBalance < 0) {
+      alert('You do not have enough funds for this transaction')
     } else {
-      total = this.state.quantity * this.props.trade.latestPrice
-    }
-    let objToSubmit = {
-      stockName: evt.target.stockName.value,
-      quantity: evt.target.quantity.value,
-      transactionType: this.state.selectedOption.value,
-      price: this.props.trade.latestPrice,
-      total: total
-    }
+      let objToSubmit = {
+        stockName: evt.target.stockName.value,
+        quantity: evt.target.quantity.value,
+        transactionType: this.state.transactionType.value,
+        price: this.state.price,
+        total
+      }
 
-    console.log(objToSubmit, 'submittedobject')
-    this.props.submitTrade(objToSubmit)
+      console.log(objToSubmit, 'submittedobject')
+      this.props.submitTrade(objToSubmit)
+    }
   }
 
   render() {
-    const {classes, error} = this.props
-    const {selectedOption} = this.state
+    const {classes, error, user} = this.props
     console.log(this.props)
 
     return (
@@ -139,8 +143,8 @@ class TradeForm extends React.Component {
                     {value: 'sell', label: 'Sell'}
                   ]}
                   required
-                  value={selectedOption}
-                  onChange={this.handleChange}
+                  value={this.state.transactionType}
+                  onChange={this.handleChange('transactionType')}
                   id="transactionType"
                   label="transactionType"
                   type="transactionType"
@@ -170,7 +174,9 @@ class TradeForm extends React.Component {
 const mapState = state => {
   console.log(state, 'state')
   return {
-    trade: state.trade
+    trade: state.trade,
+    user: state.user,
+    portfolio: state.portfolio
   }
 }
 

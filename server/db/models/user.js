@@ -17,7 +17,7 @@ const User = db.define('user', {
     allowNull: false
   },
   balance: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.DECIMAL(10, 2),
     defaultValue: 5000
   },
   password: {

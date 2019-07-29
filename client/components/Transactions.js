@@ -44,7 +44,6 @@ class Transactions extends React.Component {
 
   render() {
     const {classes, transactions} = this.props
-    console.log(transactions)
     return (
       <div id="transactionsTable">
         <h2>Transactions</h2>
