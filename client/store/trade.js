@@ -21,11 +21,8 @@ export const validateTrade = stock => async dispatch => {
         process.env.IEX_SK
       }&symbols=${stock}`
     )
-    let result
-    if (data.length) {
-      result = true
-    } else result = false
-    dispatch(validatedTrade(result))
+
+    dispatch(validatedTrade(data))
   } catch (error) {
     console(error)
   }
@@ -54,7 +51,7 @@ export const submitTrade = ({
 }
 
 const formState = {
-  validated: false
+  stockPreview: {}
 }
 
 export default function transactionsReducer(state = formState, action) {

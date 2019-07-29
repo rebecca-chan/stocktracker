@@ -27,7 +27,8 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(3)}px`
+    paddingBottom: theme.spacing(3)
+    // padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(3)}px`
   },
   form: {
     marginTop: theme.spacing()
@@ -39,15 +40,12 @@ const styles = theme => ({
   submit: {
     // marginTop: theme.spacing.unit * 3
     backgroundColor: 'teal',
-    float: 'right'
+    alignItems: 'center'
+    // marginRight: theme.spacing()
   }
 })
 
 class TradeForm extends React.Component {
-  constructor() {
-    super()
-  }
-
   render() {
     const {classes, handleSubmit, error} = this.props
     console.log(this.props, 'form props')
@@ -71,6 +69,12 @@ class TradeForm extends React.Component {
                   autoFocus
                 />
               </FormControl>
+              <button
+                type="submit" // variant="contained"
+                color="inherit"
+              >
+                Look Up
+              </button>
               <FormControl margin="normal" required fullWidth>
                 <TextField
                   required
@@ -91,13 +95,12 @@ class TradeForm extends React.Component {
                   variant="outlined"
                 />
               </FormControl>
-              <Button
+              <button
                 type="submit" // variant="contained"
                 color="inherit"
-                className={classes.submit}
               >
                 Submit Order
-              </Button>
+              </button>
               {error &&
                 error.response && (
                   <div className="form-error"> {error.response.data} </div>

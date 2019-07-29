@@ -38,6 +38,7 @@ class Portfolio extends React.Component {
   }
   render() {
     const {classes, portfolio} = this.props
+    console.log(portfolio, 'portfolio props')
     return (
       <div id="transactionsTable">
         <h2>Portfolio</h2>
@@ -86,14 +87,14 @@ class Portfolio extends React.Component {
                       <td align="left">{stock.stockName}</td>
                       <td align="right">{stock.quantity}</td>
                       <td align="right">
-                        ${stock.lastSalePrice
-                          ? stock.lastSalePrice
+                        ${stock.latestPrice
+                          ? stock.latestPrice
                               .toFixed(2)
                               .replace(/\d(?=(\d{3})+\.)/g, '$&,')
                           : null}
                       </td>
                       <td align="right">
-                        ${(stock.quantity * stock.lastSalePrice)
+                        ${(stock.quantity * stock.latestPrice)
                           .toFixed(2)
                           .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
                       </td>
