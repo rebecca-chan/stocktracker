@@ -1,9 +1,9 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {submitTrade} from '../store/trade'
+import {submitTrade, validateTrade} from '../store/trade'
 
 //materialui form components
-
+import Select from 'react-select'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import FormControl from '@material-ui/core/FormControl'
@@ -13,6 +13,7 @@ import Typography from '@material-ui/core/Typography'
 import withStyles from '@material-ui/core/styles/withStyles'
 import TextField from '@material-ui/core/TextField'
 import {createGenerateClassName} from '@material-ui/styles'
+import {isNull} from 'util'
 
 const styles = theme => ({
   main: {
@@ -36,19 +37,55 @@ const styles = theme => ({
   textField: {
     marginLeft: theme.spacing(),
     marginRight: theme.spacing()
-  },
-  submit: {
-    // marginTop: theme.spacing.unit * 3
-    backgroundColor: 'teal',
-    alignItems: 'center'
-    // marginRight: theme.spacing()
   }
 })
 
 class TradeForm extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      stockName: '',
+      quantity: '',
+      selectedOption: null
+    }
+  }
+
+  handleChange = selectedOption => {
+    this.setState({selectedOption})
+    console.log('option selected', selectedOption)
+  }
+
+  handleClick(evt) {
+    evt.preventDefault()
+    let stock = document.getElementById('stockName').value
+    this.props.validateTrade(stock)
+  }
+
+  handleSubmit(evt) {
+    evt.preventDefault()
+    let total
+    if (this.state.selectedOption === 'buy') {
+      total = -(this.state.quantity * this.props.trade.latestPrice)
+    } else {
+      total = this.state.quantity * this.props.trade.latestPrice
+    }
+    let objToSubmit = {
+      stockName: evt.target.stockName.value,
+      quantity: evt.target.quantity.value,
+      transactionType: this.state.selectedOption.value,
+      price: this.props.trade.latestPrice,
+      total: total
+    }
+
+    console.log(objToSubmit, 'submittedobject')
+    this.props.submitTrade(objToSubmit)
+  }
+
   render() {
-    const {classes, handleSubmit, error} = this.props
-    console.log(this.props, 'form props')
+    const {classes, error} = this.props
+    const {selectedOption} = this.state
+    console.log(this.props)
+
     return (
       <div className="login-new">
         <main className={classes.main}>
@@ -57,7 +94,11 @@ class TradeForm extends React.Component {
             <Typography component="h1" variant="h5" className={classes.center}>
               Market Order Form
             </Typography>
-            <form className={classes.form} onSubmit={handleSubmit} name={name}>
+            <form
+              className={classes.form}
+              onSubmit={this.handleSubmit.bind(this)}
+              name={name}
+            >
               <FormControl margin="normal" required fullWidth>
                 <TextField
                   required
@@ -72,9 +113,16 @@ class TradeForm extends React.Component {
               <button
                 type="submit" // variant="contained"
                 color="inherit"
+                onClick={this.handleClick.bind(this)}
               >
                 Look Up
               </button>
+              {this.props.trade.latestPrice ? (
+                <p>
+                  {this.props.trade.symbol} latest price ${' '}
+                  {this.props.trade.latestPrice}
+                </p>
+              ) : null}
               <FormControl margin="normal" required fullWidth>
                 <TextField
                   required
@@ -85,8 +133,14 @@ class TradeForm extends React.Component {
                   margin="normal"
                   variant="outlined"
                 />
-                <TextField
+                <Select
+                  options={[
+                    {value: 'buy', label: 'Buy'},
+                    {value: 'sell', label: 'Sell'}
+                  ]}
                   required
+                  value={selectedOption}
+                  onChange={this.handleChange}
                   id="transactionType"
                   label="transactionType"
                   type="transactionType"
@@ -113,30 +167,17 @@ class TradeForm extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {
-    handleSubmit(evt) {
-      evt.preventDefault()
-      const stockName = evt.target.stockName.value
-      const quantity = evt.target.quantity.value
-      const transactionType = evt.target.transactionType.value
-      const price = evt.target.price.value
-      let total
-      if (transactionType === 'buy') {
-        total = -quantity * price
-      } else {
-        total = quantity * price
-      }
-
-      dispatch(submitTrade(stockName, quantity, transactionType, price, total))
-    }
-  }
-}
-
 const mapState = state => {
   console.log(state, 'state')
   return {
-    transactions: state.transactions
+    trade: state.trade
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    validateTrade: stock => dispatch(validateTrade(stock)),
+    submitTrade: order => dispatch(submitTrade(order))
   }
 }
 

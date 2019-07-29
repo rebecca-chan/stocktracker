@@ -73,7 +73,21 @@ router.get('/details', isAuthenticated, async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
+    //check balance
+    console.log(req.user, 'req.user')
+    const userBalance = await User.findAll({
+      where: {
+        id: req.user.id
+      }
+    })
+    const newBalance = userBalance + req.body.total
+    if (newBalance < 0)
+      res
+        .status(404)
+        .send('You do not have enough in your account for this transaction.')
+
     const tradeInfo = req.body
+
     const transaction = await Transaction.create({
       total: tradeInfo.total,
       transactionType: tradeInfo.transactionType,
@@ -82,14 +96,6 @@ router.post('/', async (req, res, next) => {
       price: tradeInfo.price,
       userId: tradeInfo.userId
     })
-
-    const userBalance = await User.findAll({
-      where: {
-        userId: req.user.Id
-      }
-    })
-
-    const newBalance = userBalance + req.body.total
 
     const userUpdate = await User.update(
       {balance: newBalance},
