@@ -57,8 +57,6 @@ router.get('/portfolio', isAuthenticated, async (req, res, next) => {
 
 router.get('/portfolio/:stockName', isAuthenticated, async (req, res, next) => {
   try {
-    console.log('REQ USER', req.user.id)
-    console.log('STOCKNAME', req.params.stockName)
     if (req.user) {
       const transactions = await Transaction.sum('quantity', {
         where: {

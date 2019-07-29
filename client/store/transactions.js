@@ -16,14 +16,12 @@ export const getTransactions = () => async dispatch => {
   }
 }
 
-const transactionState = {
-  transactions: []
-}
+const transactionState = []
 
 export default function transactionsReducer(state = transactionState, action) {
   switch (action.type) {
     case GOT_ALL_TRANSACTIONS:
-      return [...state.transactions, ...action.transactions]
+      return [...state, ...action.transactions]
     default:
       return state
   }

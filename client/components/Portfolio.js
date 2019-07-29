@@ -38,7 +38,6 @@ class Portfolio extends React.Component {
   }
   render() {
     const {classes, portfolio} = this.props
-    console.log(portfolio, 'portfolio props')
     return (
       <div id="transactionsTable">
         <h2>Portfolio</h2>
@@ -110,7 +109,6 @@ class Portfolio extends React.Component {
 }
 
 const mapState = state => {
-  console.log(state, 'state')
   return {
     portfolio: state.portfolio
   }

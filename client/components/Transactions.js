@@ -141,7 +141,6 @@ class Transactions extends React.Component {
 }
 
 const mapState = state => {
-  console.log(state, 'state')
   return {
     transactions: state.transactions
   }
