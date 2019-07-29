@@ -115,17 +115,19 @@ class Transactions extends React.Component {
                       <TableCell align="right">
                         $
                         {transaction.price
-                          ? transaction.price
-                              .toFixed(2)
-                              .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                          ? transaction.price.replace(
+                              /\d(?=(\d{3})+\.)/g,
+                              '$&,'
+                            )
                           : null}
                       </TableCell>
                       <TableCell align="right">
                         $
                         {transaction.total
-                          ? transaction.total
-                              .toFixed(2)
-                              .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                          ? transaction.total.replace(
+                              /\d(?=(\d{3})+\.)/g,
+                              '$&,'
+                            )
                           : null}
                       </TableCell>
                     </TableRow>
