@@ -122,7 +122,7 @@ class TradeForm extends React.Component {
                 <TextField
                   required
                   id="stockName"
-                  label="stockName"
+                  label="Stock Symbol"
                   className={classes.textField}
                   margin="normal"
                   variant="outlined"
@@ -134,7 +134,7 @@ class TradeForm extends React.Component {
                 color="inherit"
                 onClick={this.handleClick.bind(this)}
               >
-                Get Current Market Price
+                Look Up Stock Information
               </button>
               {this.props.trade.latestPrice ? (
                 <p>
@@ -146,7 +146,7 @@ class TradeForm extends React.Component {
                 <TextField
                   required
                   id="quantity"
-                  label="quantity"
+                  label="Quantity"
                   type="quantity"
                   className={classes.textField}
                   margin="normal"

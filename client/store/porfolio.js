@@ -3,9 +3,9 @@ import {IEX_SK} from '../../secrets'
 
 const GOT_PORTFOLIO = 'GOT_PORTFOLIO'
 
-export const gotPortfolio = portfolio => ({
+export const gotPortfolio = payload => ({
   type: GOT_PORTFOLIO,
-  portfolio
+  payload
 })
 
 export const getPortfolio = () => async dispatch => {
@@ -42,7 +42,7 @@ const portfolioState = []
 export default function transactionsReducer(state = portfolioState, action) {
   switch (action.type) {
     case GOT_PORTFOLIO:
-      return [...state, ...action.portfolio]
+      return [...action.payload]
     default:
       return state
   }

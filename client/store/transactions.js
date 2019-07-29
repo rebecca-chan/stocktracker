@@ -2,9 +2,9 @@ import axios from 'axios'
 
 const GOT_ALL_TRANSACTIONS = 'GOT_ALL_TRANSACTIONS'
 
-export const gotAllTransactions = transactions => ({
+export const gotAllTransactions = payload => ({
   type: GOT_ALL_TRANSACTIONS,
-  transactions
+  payload
 })
 
 export const getTransactions = () => async dispatch => {
@@ -21,7 +21,7 @@ const transactionState = []
 export default function transactionsReducer(state = transactionState, action) {
   switch (action.type) {
     case GOT_ALL_TRANSACTIONS:
-      return [...state, ...action.transactions]
+      return [...action.payload]
     default:
       return state
   }
