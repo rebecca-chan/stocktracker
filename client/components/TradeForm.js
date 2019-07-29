@@ -74,7 +74,7 @@ class TradeForm extends React.Component {
       alert('You do not have enough funds for this transaction')
     } else {
       let objToSubmit = {
-        stockName: evt.target.stockName.value,
+        stockName: evt.target.stockName.value.toUpperCase(),
         quantity: evt.target.quantity.value,
         transactionType: this.state.transactionType.value,
         price: this.state.price,
@@ -98,6 +98,14 @@ class TradeForm extends React.Component {
             <Typography component="h1" variant="h5" className={classes.center}>
               Market Order Form
             </Typography>
+            {
+              <p>
+                Funds for trading: ${user.balance.replace(
+                  /\d(?=(\d{3})+\.)/g,
+                  '$&,'
+                )}
+              </p>
+            }
             <form
               className={classes.form}
               onSubmit={this.handleSubmit.bind(this)}
@@ -119,7 +127,7 @@ class TradeForm extends React.Component {
                 color="inherit"
                 onClick={this.handleClick.bind(this)}
               >
-                Look Up
+                Get Current Market Price
               </button>
               {this.props.trade.latestPrice ? (
                 <p>
