@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {submitTrade, validateTrade} from '../store/trade'
+import {submitTrade, validateTrade, getQuantity} from '../store/trade'
 
 //materialui form components
 import Select from 'react-select'
@@ -27,7 +27,6 @@ const styles = theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     paddingBottom: theme.spacing(3)
-    // padding: `${theme.spacing(2)}px ${theme.spacing(3)}px ${theme.spacing(3)}px`
   },
   form: {
     marginTop: theme.spacing()
@@ -43,7 +42,8 @@ class TradeForm extends React.Component {
     super(props)
     this.state = {
       stockName: '',
-      quantity: '',
+      quantity: 0,
+      sharesOwned: 0,
       price: props.trade.latestPrice,
       balance: props.user.balance,
       transactionType: null
@@ -52,43 +52,59 @@ class TradeForm extends React.Component {
 
   handleChange = name => value => {
     this.setState({[name]: value})
-    console.log('option selected', event)
   }
 
   async handleClick(evt) {
     evt.preventDefault()
     let stock = document.getElementById('stockName').value
     await this.props.validateTrade(stock)
-    console.log(this.props, 'handleclick props access')
     this.setState({price: this.props.trade.latestPrice})
+    await this.props.getQuantity(stock)
+    this.setState({sharesOwned: this.props.trade.sharesOwned})
   }
 
   handleSubmit(evt) {
     evt.preventDefault()
+    let transactionType = this.state.transactionType.value
     let total = (this.state.price * evt.target.quantity.value).toFixed(2)
-    if (this.state.transactionType.value === 'buy') {
+    if (transactionType === 'buy') {
       total = -total
     }
-    let newBalance = Number(total) + Number(this.state.balance)
-    if (newBalance < 0) {
-      alert('You do not have enough funds for this transaction')
+    let quantity = evt.target.quantity.value
+    if (transactionType === 'sell') {
+      quantity = -quantity
+    }
+    console.log(this.state.sharesOwned, 'shares owned')
+    let newQuantity = Number(this.state.sharesOwned) + Number(quantity)
+    console.log(newQuantity, 'IS THIS NEGATIVE')
+    if (
+      transactionType === 'sell' &&
+      (newQuantity < 0 || !this.state.sharesOwned)
+    ) {
+      alert('You do not have enough shares to sell')
     } else {
-      let objToSubmit = {
-        stockName: evt.target.stockName.value.toUpperCase(),
-        quantity: evt.target.quantity.value,
-        transactionType: this.state.transactionType.value,
-        price: this.state.price,
-        total
-      }
+      let newBalance = Number(total) + Number(this.state.balance)
+      if (newBalance < 0) {
+        alert('You do not have enough funds for this transaction')
+      } else {
+        let objToSubmit = {
+          stockName: evt.target.stockName.value.toUpperCase(),
+          quantity,
+          transactionType,
+          price: this.state.price,
+          total
+        }
 
-      console.log(objToSubmit, 'submittedobject')
-      this.props.submitTrade(objToSubmit)
+        console.log(objToSubmit, 'submittedobject')
+        this.props.submitTrade(objToSubmit)
+        this.setState({stockName: '', quantity: 0, transactionType: null})
+      }
     }
   }
 
   render() {
     const {classes, error, user} = this.props
-    console.log(this.props)
+    console.log(this.props, 'form props')
 
     return (
       <div className="login-new">
@@ -191,7 +207,8 @@ const mapState = state => {
 const mapDispatchToProps = dispatch => {
   return {
     validateTrade: stock => dispatch(validateTrade(stock)),
-    submitTrade: order => dispatch(submitTrade(order))
+    submitTrade: order => dispatch(submitTrade(order)),
+    getQuantity: stock => dispatch(getQuantity(stock))
   }
 }
 

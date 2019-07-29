@@ -55,6 +55,25 @@ router.get('/portfolio', isAuthenticated, async (req, res, next) => {
   }
 })
 
+router.get('/portfolio/:stockName', isAuthenticated, async (req, res, next) => {
+  try {
+    console.log('REQ USER', req.user.id)
+    console.log('STOCKNAME', req.params.stockName)
+    if (req.user) {
+      const transactions = await Transaction.sum('quantity', {
+        where: {
+          userId: req.user.id,
+          stockName: req.params.stockName.toUpperCase()
+        }
+      })
+
+      res.json(transactions)
+    }
+  } catch (error) {
+    console.error(error)
+  }
+})
+
 //gets every transaction
 router.get('/details', isAuthenticated, async (req, res, next) => {
   try {
@@ -73,22 +92,18 @@ router.get('/details', isAuthenticated, async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    //check balance
     const userInfo = await User.findOne({
       where: {
         id: req.user.id
       }
     })
-    console.log('USERINFO', userInfo)
     const newBalance = Number(userInfo.balance) + Number(req.body.total)
-    console.log('NEWBLANACE', newBalance)
     if (newBalance < 0) {
       res
         .status(400)
         .send('You do not have enough in your account for this transaction.')
     } else {
       const tradeInfo = req.body
-      console.log(tradeInfo, 'tradeInfo')
       const transaction = await Transaction.create({
         total: tradeInfo.total,
         transactionType: tradeInfo.transactionType,
@@ -106,8 +121,7 @@ router.post('/', async (req, res, next) => {
           }
         }
       )
-      console.log(userUpdate)
-      console.log(transaction)
+
       res.sendStatus(201)
     }
   } catch (error) {

@@ -3,6 +3,7 @@ import {IEX_SK} from '../../secrets'
 
 const SUBMIT_TRADE = 'SUBMIT_TRADE'
 const VALIDATE_TRADE = 'VALIDATE_TRADE'
+const GOT_QUANTITY = 'GOT_QUANTITY'
 
 export const submittedTrade = payload => ({
   type: SUBMIT_TRADE,
@@ -11,6 +12,11 @@ export const submittedTrade = payload => ({
 
 export const validatedTrade = payload => ({
   type: VALIDATE_TRADE,
+  payload
+})
+
+export const gotQuantity = payload => ({
+  type: GOT_QUANTITY,
   payload
 })
 
@@ -24,7 +30,17 @@ export const validateTrade = stock => async dispatch => {
     )
     dispatch(validatedTrade(data))
   } catch (error) {
-    console(error)
+    console.error(error)
+  }
+}
+
+export const getQuantity = stock => async dispatch => {
+  try {
+    const {data} = await axios.get(`api/transactions/portfolio/${stock}`)
+    let number = {sharesOwned: data}
+    dispatch(gotQuantity(number))
+  } catch (error) {
+    console.error(error)
   }
 }
 
@@ -43,8 +59,9 @@ export const submitTrade = ({
       transactionType,
       price
     })
-    console.log(data)
-    dispatch(submittedTrade(data))
+
+    let status = {submitStatus: data}
+    dispatch(submittedTrade(status))
   } catch (error) {
     console.error(error)
   }
@@ -55,9 +72,11 @@ const formState = {}
 export default function transactionsReducer(state = formState, action) {
   switch (action.type) {
     case SUBMIT_TRADE:
-      return []
+      return {...state, ...action.payload}
     case VALIDATE_TRADE:
-      return {...formState, ...action.payload}
+      return {...state, ...action.payload}
+    case GOT_QUANTITY:
+      return {...state, ...action.payload}
     default:
       return state
   }
