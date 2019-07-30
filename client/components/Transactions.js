@@ -13,7 +13,7 @@ import Paper from '@material-ui/core/Paper'
 
 const styles = theme => ({
   root: {
-    width: '80%',
+    width: '70%',
     marginTop: theme.spacing(3),
     overflowX: 'auto',
     margin: 'auto'
@@ -67,7 +67,7 @@ class Transactions extends React.Component {
                   Trade Type
                 </TableCell>
                 <TableCell
-                  width="40%"
+                  width="20%"
                   align="left"
                   className={classes.tableCell}
                 >
@@ -75,7 +75,7 @@ class Transactions extends React.Component {
                 </TableCell>
 
                 <TableCell
-                  width="20%"
+                  width="10%"
                   align="right"
                   className={classes.tableCell}
                 >
@@ -110,7 +110,9 @@ class Transactions extends React.Component {
                       <TableCell align="left">
                         {transaction.stockName}
                       </TableCell>
-                      <TableCell align="left">{transaction.quantity}</TableCell>
+                      <TableCell align="right">
+                        {transaction.quantity}
+                      </TableCell>
                       <TableCell align="right">
                         $
                         {transaction.price

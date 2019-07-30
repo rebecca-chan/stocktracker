@@ -14,7 +14,7 @@ import Paper from '@material-ui/core/Paper'
 
 const styles = theme => ({
   root: {
-    width: '80%',
+    width: '50%',
     marginTop: theme.spacing(3),
     overflowX: 'auto',
     margin: 'auto'
