@@ -22,7 +22,6 @@ export const gotQuantity = payload => ({
 
 export const validateTrade = stock => async dispatch => {
   try {
-    console.log('validatetrade thunk hit')
     const {data} = await axios.get(
       `https://cloud.iexapis.com/v1/stock/${stock}/quote?token=${
         process.env.IEX_SK
@@ -30,7 +29,7 @@ export const validateTrade = stock => async dispatch => {
     )
     dispatch(validatedTrade(data))
   } catch (error) {
-    console.error(error)
+    dispatch(validatedTrade({error: 'Invalid Stock Symbol'}))
   }
 }
 
@@ -72,9 +71,9 @@ const formState = {}
 export default function transactionsReducer(state = formState, action) {
   switch (action.type) {
     case SUBMIT_TRADE:
-      return {...state, ...action.payload}
+      return {}
     case VALIDATE_TRADE:
-      return {...state, ...action.payload}
+      return {...action.payload}
     case GOT_QUANTITY:
       return {...state, ...action.payload}
     default:

@@ -40,7 +40,17 @@ class Portfolio extends React.Component {
     const {classes, portfolio} = this.props
     return (
       <div id="transactionsTable">
-        <h2>Portfolio</h2>
+        <h2>
+          Portfolio ${portfolio.length
+            ? portfolio
+                .reduce(
+                  (acc, stock) => acc + stock.quantity * stock.latestPrice,
+                  0
+                )
+                .toFixed(2)
+                .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+            : null}
+        </h2>
 
         <Paper className={classes.root}>
           <Table className={classes.table}>
