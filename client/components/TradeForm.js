@@ -89,7 +89,7 @@ class TradeForm extends React.Component {
           total
         }
         this.props.submitTrade(objToSubmit)
-        this.setState({stockName: '', quantity: 0, transactionType: null})
+        alert('Your order has been submitted')
       }
     }
   }
@@ -142,6 +142,7 @@ class TradeForm extends React.Component {
                   {this.props.trade.latestPrice}
                 </p>
               ) : null}
+              {this.props.trade.error ? <p>{this.props.trade.error} </p> : null}
               <FormControl margin="normal" required fullWidth>
                 <TextField
                   required
@@ -174,10 +175,6 @@ class TradeForm extends React.Component {
               >
                 Submit Order
               </button>
-              {error &&
-                error.response && (
-                  <div className="form-error"> {error.response.data} </div>
-                )}
             </form>
           </Paper>
         </main>
