@@ -95,8 +95,7 @@ class TradeForm extends React.Component {
   }
 
   render() {
-    const {classes, error, user} = this.props
-    console.log(this.props, 'form props')
+    const {classes, user} = this.props
     return (
       <div className="login-new">
         <main className={classes.main}>
@@ -184,7 +183,6 @@ class TradeForm extends React.Component {
 }
 
 const mapState = state => {
-  console.log(state, 'state')
   return {
     trade: state.trade,
     user: state.user,

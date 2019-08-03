@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {IEX_SK} from '../../secrets'
+const IEX_SK = process.env.IEX_SK
 
 const GOT_PORTFOLIO = 'GOT_PORTFOLIO'
 
@@ -18,7 +18,7 @@ export const getPortfolio = () => async dispatch => {
       const {data} = await axios.get(
         `https://cloud.iexapis.com/v1/stock/${
           portfolioStocks[i].stockName
-        }/quote?token=${process.env.IEX_SK}`
+        }/quote?token=${IEX_SK}`
       )
       marketData.push({...portfolioStocks[i], ...data})
     }
