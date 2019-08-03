@@ -16,6 +16,7 @@ if (process.env.NODE_ENV === 'test') {
 }
 
 if (process.env.NODE_ENV !== 'production') require('../secrets')
+const IEX_SK = process.env.IEX_SK
 
 // passport registration
 passport.serializeUser((user, done) => done(null, user.id))
@@ -85,14 +86,10 @@ const startListening = () => {
 const syncDb = () => db.sync()
 
 async function bootApp() {
-  try {
-    await sessionStore.sync()
-    await syncDb()
-    await createApp()
-    await startListening()
-  } catch (error) {
-    console.log(error)
-  }
+  await sessionStore.sync()
+  await syncDb()
+  await createApp()
+  await startListening()
 }
 
 if (require.main === module) {
