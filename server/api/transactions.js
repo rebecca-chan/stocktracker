@@ -1,6 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const {Transaction, User} = require('../db/models')
+const axios = require('axios')
+const API_KEY = process.env.API_KEY
+
 module.exports = router
 
 function isAuthenticated(req, res, next) {
@@ -24,6 +27,19 @@ router.get('/', isAuthenticated, async (req, res, next) => {
     }
   } catch (error) {
     console.log(error)
+  }
+})
+
+router.get('/iex/:stock', async (req, res, next) => {
+  const stock = req.params.stock
+
+  try {
+    const {data} = await axios.get(
+      `https://cloud.iexapis.com/v1/stock/${stock}/quote?token=${API_KEY}`
+    )
+    res.send(data)
+  } catch (error) {
+    console.error(error)
   }
 })
 

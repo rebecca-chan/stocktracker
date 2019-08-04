@@ -1,5 +1,4 @@
 import axios from 'axios'
-const IEX_SK = process.env.IEX_SK
 
 const GOT_PORTFOLIO = 'GOT_PORTFOLIO'
 
@@ -16,9 +15,7 @@ export const getPortfolio = () => async dispatch => {
     let marketData = []
     for (let i = 0; i < portfolioStocks.length; i++) {
       const {data} = await axios.get(
-        `https://cloud.iexapis.com/v1/stock/${
-          portfolioStocks[i].stockName
-        }/quote?token=${IEX_SK}`
+        `api/transactions/iex/${portfolioStocks[i].stockName}`
       )
       marketData.push({...portfolioStocks[i], ...data})
     }
@@ -28,8 +25,6 @@ export const getPortfolio = () => async dispatch => {
       if (marketData[i].change < 0) marketData[i].color = 'red'
       if (marketData[i].change > 0) marketData[i].color = 'green'
     }
-
-    console.log(marketData, 'marketData')
 
     dispatch(gotPortfolio(marketData))
   } catch (error) {

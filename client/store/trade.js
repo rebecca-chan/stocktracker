@@ -1,5 +1,4 @@
 import axios from 'axios'
-const IEX_SK = process.env.IEX_SK
 
 const SUBMIT_TRADE = 'SUBMIT_TRADE'
 const VALIDATE_TRADE = 'VALIDATE_TRADE'
@@ -22,9 +21,7 @@ export const gotQuantity = payload => ({
 
 export const validateTrade = stock => async dispatch => {
   try {
-    const {data} = await axios.get(
-      `https://cloud.iexapis.com/v1/stock/${stock}/quote?token=${IEX_SK}`
-    )
+    const {data} = await axios.get(`api/transactions/iex/${stock}`)
     dispatch(validatedTrade(data))
   } catch (error) {
     dispatch(validatedTrade({error: 'Invalid Stock Symbol'}))
